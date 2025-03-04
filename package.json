@@ -1,0 +1,21 @@
+{
+  "name": "marfoodmd",
+  "version": "1.0.0",
+  "description": "On-Demand App MarFood melayani delivery makanan dengan motto #MakanDimanaja",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "pg": "^8.13.3",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
+  }
+}
