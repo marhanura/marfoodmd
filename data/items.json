@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Soto Ayam Kalkun",
+    "description": "Kuah soto berisi sayur dan suwiran ayam",
+    "price": 25000,
+    "imgUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Soto_ayam.JPG/300px-Soto_ayam.JPG",
+    "CategoryId": 1
+  },
+  {
+    "name": "Rujak Soto",
+    "description": "Rujak sayur dengan soto, bisa soto daging (daging sapi) atau soto babat",
+    "price": 10000,
+    "imgUrl": "https://upload.wikimedia.org/wikipedia/id/thumb/a/a8/Rujak_soto.jpg/330px-Rujak_soto.jpg",
+    "CategoryId": 1
+  },
+  {
+    "name": "Teh Tarik",
+    "description": "Teh dengan campuran susu kental manis dan dibuat dengan teknik tarik",
+    "price": 5000,
+    "imgUrl": "https://upload.wikimedia.org/wikipedia/id/thumb/a/a8/Rujak_soto.jpg/330px-Rujak_soto.jpg",
+    "CategoryId": 2
+  },
+  {
+    "name": "Es Teler",
+    "description": "Es batu, alpukat, kelapa muda, dan nangka, dicampur susu kental manis, dan santan",
+    "price": 10000,
+    "imgUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Es_Teller_77.jpg/300px-Es_Teller_77.jpg",
+    "CategoryId": 2
+  }
+]
