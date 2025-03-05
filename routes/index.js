@@ -1,6 +1,24 @@
 const Controller = require("../controllers/controller")
 const router = require("express").Router()
+const session = require('express-session')
 
+const isLoggedIn = function(req,res, next){
+    if (!req.session.userId) {
+        const error = "Please login first"
+        res.redirect(`/login?error=${error}`)
+    }else{
+        next()
+    }
+}
+
+const isAdmin = function(reg, res, next){
+    if (req.session.userId && req.session.role !== "admin") {
+        const error ="You have no access"
+        res.redirect(`/login?error=${error}`)
+    } else {
+        next()
+    }
+}
 
 router.get("/", Controller.home);
 router.get("/login", Controller.renderLogin);
