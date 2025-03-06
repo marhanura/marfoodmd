@@ -71,6 +71,9 @@ class Controller {
   static async renderRegister(req, res) {
     try {
       let { error } = req.query;
+      if (error) {
+        error = error.split(",").join(" ");
+      }
       if (req.session.userId) {
         res.redirect("/");
       } else {
@@ -91,7 +94,10 @@ class Controller {
       });
       res.redirect("/login");
     } catch (error) {
-      if (error.name === "SequelizeValidationError") {
+      if (
+        error.name === "SequelizeValidationError" ||
+        error.name === "SequelizeUniqueConstraintError"
+      ) {
         let errors = error.errors.map((el) => el.message);
         res.redirect(`/register?error=${errors}`);
       } else {
@@ -187,11 +193,7 @@ class Controller {
           where: { UserId: id },
         }
       );
-      let data = await User.findByPk(id, {
-        include: UserProfile,
-      });
-      res.render(data);
-      // res.redirect("/profile/edit", { data });
+      res.redirect("/profile");
     } catch (error) {
       res.send(error);
     }
