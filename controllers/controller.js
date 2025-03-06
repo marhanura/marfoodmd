@@ -127,7 +127,8 @@ class Controller {
 
   static async allMenu(req, res) {
     try {
-      let menu = await Item.findAll();
+      let { search } = req.query;
+      let menu = await Item.search(search);
       let categories = await Category.findAll();
       res.render("menu", { menu, categories, formatRupiah });
     } catch (error) {

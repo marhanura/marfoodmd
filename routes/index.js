@@ -3,6 +3,7 @@
 const Controller = require("../controllers/controller");
 const router = require("express").Router();
 const routerProfile = require("./profile");
+const routerMenu = require("./menu");
 
 const isLoggedIn = function (req, res, next) {
   if (!req.session.userId) {
@@ -22,6 +23,7 @@ const isAdmin = function (reg, res, next) {
   }
 };
 
+router.get("/", Controller.home);
 router.get("/register", Controller.renderRegister);
 router.post("/register", Controller.handlerRegister);
 router.get("/login", Controller.renderLogin);
@@ -29,11 +31,7 @@ router.post("/login", Controller.handlerLogin);
 router.get("/logout", Controller.logout);
 router.get("/about", Controller.construction);
 router.get("/contact", Controller.construction);
-router.get("/", Controller.home);
-router.get("/menu", Controller.allMenu);
-router.get("/menu/:itemId/add", Controller.addToCart);
-router.get("/menu/category/:categoryId", Controller.menuByCategory);
-router.get("/categories", Controller.categories);
+router.use("/menu", routerMenu);
 router.get("/cart", Controller.cart);
 router.get("/cart/:id/increase", Controller.increaseCart);
 router.get("/cart/:id/decrease", Controller.decreaseCart);
