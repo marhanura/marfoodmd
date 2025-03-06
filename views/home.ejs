@@ -29,69 +29,29 @@
       <h2 class="text-center text-warning">Our Menu</h2>
       <div id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-          <div class="carousel-item active">
+          <% menu.forEach(el => { %>
+          <div
+            class="carousel-item <% if (el.id === 1) { %> <%= "active" %> <% } %>"
+          >
             <div class="row justify-content-center">
               <div class="col-md-4">
                 <div class="card">
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Soto_ayam.JPG/300px-Soto_ayam.JPG"
+                    src="<%= el.imgUrl %>"
                     class="card-img-top"
-                    alt="Soto Ayam Kalkun"
+                    style="object-fit: cover; height: 250px"
+                    alt="<%= el.name %>"
                   />
                   <div class="card-body text-center">
-                    <h5 class="card-title">Soto Ayam Kalkun</h5>
-                    <p class="card-text">
-                      Kuah soto berisi sayur dan suwiran ayam.
-                    </p>
+                    <h5 class="card-title"><%= el.name %></h5>
+                    <p class="card-text"><%= el.description %></p>
                     <button class="btn btn-warning">Order Now</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="carousel-item">
-            <div class="row justify-content-center">
-              <div class="col-md-4">
-                <div class="card">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Es_Teller_77.jpg/300px-Es_Teller_77.jpg"
-                    height="310"
-                    class="card-img-top"
-                    alt="Es Teler"
-                  />
-                  <div class="card-body text-center">
-                    <h5 class="card-title">Es Teler</h5>
-                    <p class="card-text">
-                      Es batu, alpukat, kelapa muda, dan nangka, dicampur susu
-                      kental manis, dan santan.
-                    </p>
-                    <button class="btn btn-warning">Order Now</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <div class="row justify-content-center">
-              <div class="col-md-4">
-                <div class="card">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/id/thumb/a/a8/Rujak_soto.jpg/330px-Rujak_soto.jpg"
-                    class="card-img-top"
-                    alt="Rujak Soto"
-                  />
-                  <div class="card-body text-center">
-                    <h5 class="card-title">Rujak Soto</h5>
-                    <p class="card-text">
-                      Es batu, alpukat, kelapa muda, dan nangka, dicampur susu
-                      kental manis, dan santan.
-                    </p>
-                    <button class="btn btn-warning">Order Now</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <% }) %>
         </div>
         <a
           class="carousel-control-prev"
