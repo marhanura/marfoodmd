@@ -1,4 +1,5 @@
-const formatRupiah = require('../helpers/helper.js')
+// CONTROLLER
+const formatRupiah = require("../helpers/helper.js");
 const {
   Cart,
   CartItem,
@@ -114,7 +115,7 @@ class Controller {
       }
     }
   }
-  static async categoriesMenu(req, res) {
+  static async categories(req, res) {
     try {
       let data = await Category.findAll({ include: Item });
       res.render("category", { data });
@@ -125,8 +126,8 @@ class Controller {
   static async renderByCategory(req, res) {
     try {
       let { categoryId } = req.params;
-      let data = await Item.findAll({ where: { CategoryId: categoryId } });
-      res.render("item", { data });
+      let data = await Category.findByPk(categoryId, { include: Item });
+      res.render("menu", { data, formatRupiah });
     } catch (error) {
       res.send(error);
     }
@@ -137,15 +138,25 @@ class Controller {
       res.send(error);
     }
   }
+
+  static async addToCart(req, res) {
+    try {
+      let { categoryId, itemId } = req.params;
+      let cart = await Cart.findAll({ where: { ItemId: itemId } });
+      res.redirect(`/categories/${categoryId}`);
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
   static async cart(req, res) {
     try {
-        const data = await Cart.findAll({
-            include: CartItem 
-          });
-        res.send(data)
-        // res.render('cart', {data, formatRupiah})
+      const data = await Cart.findAll({
+        include: CartItem,
+      });
+      res.send(data);
+      // res.render('cart', {data, formatRupiah})
     } catch (error) {
-        
       res.send(error.message);
     }
   }
