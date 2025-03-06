@@ -3,8 +3,9 @@ const app = express();
 const port = 3000;
 const router = require("./routes");
 const session = require("express-session");
+const easyinvoice = require("easyinvoice");
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(

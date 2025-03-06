@@ -25,7 +25,6 @@ router.get("/about", Controller.construction);
 router.get("/contact", Controller.construction);
 router.use("/menu", routerMenu);
 router.use("/cart", isLoggedIn, routerCart);
-router.get("/success", Controller.renderInvoice);
-router.use("/profile/", isLoggedIn, routerProfile);
+router.use("/profile", isLoggedIn, routerProfile);
 
 module.exports = router;
