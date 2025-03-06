@@ -13,15 +13,14 @@
         ><%= cat.name.toUpperCase() %></a
       >
       <% }) %>
-      <form class="form-inline">
+      <form class="d-flex" method="get" style="margin: 25px">
         <input
-          class="form-control mr-sm-2"
+          class="form-control me-2"
           type="search"
-          placeholder="Search menu..."
+          name="search"
+          placeholder="Search menu"
         />
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-          Search
-        </button>
+        <button class="btn btn-success" type="submit">Search</button>
       </form>
       <% menu.forEach(el => { %>
       <div class="card mb-3">
