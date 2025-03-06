@@ -35,6 +35,6 @@ router.get("/cart", Controller.cart);
 router.post("/cart", Controller.handlerCart);
 router.get("/cart/:id/delete", Controller.deleteCart);
 router.get("/success", Controller.renderInvoice);
-router.get("/profile/", isLoggedIn, routerProfile);
+router.use("/profile/", isLoggedIn, routerProfile);
 
 module.exports = router;

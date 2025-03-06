@@ -16,7 +16,7 @@
         width="100"
         style="margin: auto"
       />
-      <h2 class="text-center text-warning">Marfood MD</h2>
+      <h2 class="text-center text-warning">Login to Account</h2>
       <p class="text-center text-muted mb-4">Login to continue</p>
       <form action="/login" method="POST">
         <div class="mb-3">
@@ -45,6 +45,10 @@
               placeholder="Password"
               required
             />
+            <i
+            class="bi bi-eye-slash input-group-text"
+            id="togglePassword"
+          ></i>
           </div>
         </div>
         <button type="submit" class="btn btn-warning w-100">Login</button>
@@ -55,4 +59,14 @@
       </p>
     </div>
   </body>
+  <script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+    togglePassword.addEventListener("click", () => {
+      const type =
+        password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+      this.classList.toggle("bi-eye");
+    });
+  </script>
 </html>
