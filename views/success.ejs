@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./_partial/_head') %>
+    <title>Cart - MarFoodMD</title>
+  </head>
+  <body class="bg-warning-subtle">
+    <%- include('./_partial/_navbar') %>
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-body">
+              <center>
+                <img
+                  src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/purchased.png"
+                  alt="Purchase completed"
+                />
+                <h5>Purchase completed!</h5>
+              </center>
+              <div class="d-flex justify-content-evenly">
+                <a href="/" class="btn btn-success mt-3">Go to Main Page</a>
+                <form method="post" action="/cart/success">
+                  <button class="btn btn-success mt-3" type="submit">
+                    Download Invoice
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('./_partial/_footer') %>
+  </body>
+</html>

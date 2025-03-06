@@ -14,6 +14,8 @@ const isLoggedIn = function (req, res, next) {
 
 router.get("/", Controller.cart);
 router.post("/", Controller.handlerCart);
+router.get("/success", Controller.success);
+router.post("/success", Controller.renderInvoice);
 router.get("/:id/increase", Controller.increaseCart);
 router.get("/:id/decrease", Controller.decreaseCart);
 router.get("/:id/delete", Controller.deleteCart);

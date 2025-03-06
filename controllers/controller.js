@@ -10,6 +10,7 @@ const {
 } = require("../models");
 const bcrypt = require("bcryptjs");
 const e = require("express");
+const easyinvoice = require("easyinvoice");
 
 class Controller {
   static async home(req, res) {
@@ -130,7 +131,8 @@ class Controller {
       let { search } = req.query;
       let menu = await Item.search(search);
       let categories = await Category.findAll();
-      res.render("menu", { menu, categories, formatRupiah });
+      let cartUser = await Cart.findAll({ include: User });
+      res.render("menu", { menu, categories, cartUser, formatRupiah });
     } catch (error) {
       res.send(error);
     }
@@ -194,13 +196,14 @@ class Controller {
 
   static async cart(req, res) {
     try {
+      let { deleted } = req.query;
       let UserId = req.session.userId;
       let cart = await Cart.findAll({ include: Item }, { where: { UserId } });
       let cartItems = await CartItem.findAll();
       let user = await User.findByPk(req.session.userId, {
         include: UserProfile,
       });
-      res.render("cart", { cartItems, formatRupiah, user, cart });
+      res.render("cart", { cartItems, deleted, formatRupiah, user, cart });
     } catch (error) {
       res.send(error.message);
     }
@@ -269,31 +272,104 @@ class Controller {
   static async deleteCart(req, res) {
     try {
       let { id } = req.params;
-      await Cart.destroy({ where: { id: id } })
-        .then((deleted) => {
-          if (deleted) {
-            return Cart.findAll();
-          } else {
-            throw new Error("Item not found");
-          }
-        })
-        .then((updatedCart) => {
-          res.json({ message: "Item deleted", cart: updatedCart });
-        })
-        .catch((error) => {
-          res.status(500).json({ error: error.message });
-        });
-      res.redirect("/cart");
+      let data = await Cart.findByPk(id, { include: Item });
+      let deleted = "";
+      data.Items.map((el) => (deleted = el.name));
+      await CartItem.destroy({ where: { CartId: id } });
+      await Cart.destroy({
+        where: {
+          id: id,
+        },
+      });
+      res.redirect(`/cart?deleted=${deleted}`);
     } catch (error) {
       res.send(error);
     }
   }
+
+  static async success(req, res) {
+    try {
+      const userId = req.session.userId;
+      let cart = await Cart.findAll(
+        { include: Item },
+        { where: { UserId: userId } }
+      );
+      cart.forEach((el) => {
+        CartItem.destroy({ where: { CartId: el.id } });
+      });
+      await Cart.destroy({ where: { UserId: userId } });
+      res.render("success");
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
   static async renderInvoice(req, res) {
     try {
+      const userId = req.session.userId;
+      const user = await User.findByPk(userId, {
+        include: UserProfile,
+      });
+      let cart = await Cart.findAll(
+        { include: Item },
+        { where: { UserId: userId } }
+      );
+      let productList = [];
+      let listItem = {};
+      cart.forEach((el) => {
+        el.Items.forEach((item) => {
+          listItem.quantity = el.quantity;
+          listItem.description = item.name;
+          listItem.price = item.price;
+          productList.push(listItem);
+          listItem = {};
+        });
+      });
+
+      const data = {
+        client: {
+          company: user.name,
+          address: user.UserProfile.address,
+          zip: user.email,
+          city: user.UserProfile.phoneNumber,
+        },
+        sender: {
+          company: "MarFoodMD",
+          address: "Hacktiv8 Pondok Indah",
+          zip: "HCK-081",
+          city: "Jakarta",
+          country: "Indonesia",
+        },
+        images: {
+          logo: "https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/logo.png",
+        },
+        information: {
+          number:
+            new Date().getFullYear() +
+            new Date().getMonth() +
+            user.role +
+            user.id,
+          date: new Date().toISOString().split("T")[0],
+        },
+        products: productList,
+        bottomNotice: "Thank you for purchasing with us! #MakanDimanaaja",
+        settings: {
+          currency: "IDR",
+        },
+      };
+      const result = await easyinvoice.createInvoice(data);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="invoice.pdf"'
+      );
+      res.send(Buffer.from(result.pdf, "base64"));
     } catch (error) {
       res.send(error);
     }
   }
+
   static async profile(req, res) {
     try {
       let id = req.session.userId;
@@ -305,6 +381,7 @@ class Controller {
       res.send(error);
     }
   }
+
   static async editProfile(req, res) {
     try {
       let id = req.session.userId;
@@ -314,6 +391,7 @@ class Controller {
       res.send(error);
     }
   }
+
   static async handlerEditProfile(req, res) {
     try {
       let id = req.session.userId;
@@ -340,6 +418,7 @@ class Controller {
       res.send(error);
     }
   }
+
   static async logout(req, res) {
     try {
       await req.session.destroy();
