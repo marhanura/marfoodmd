@@ -1,48 +1,5 @@
-<!-- Modal -->
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Top Up Balance</h1>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <p>Choose how to top up your balance</p>
-        <input type="radio" name="balance" />
-        <img
-          src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/gopaylater.png"
-          alt="Gopaylater"
-          width="100"
-        />
-        <input type="radio" name="balance" />
-        <img
-          src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/spaylater.png"
-          alt="Spaylater"
-          width="100"
-        />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End Modal -->
 <nav
-  class="navbar navbar-expand-lg navbar-light"
+  class="navbar navbar-expand-lg shadow-lg p-4"
   style="background-color: #ffa725"
 >
   <div class="container">
@@ -58,60 +15,17 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle text-white"
-            id="menuDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Menu</a
-          >
-          <ul class="dropdown-menu">
-            <% if(category) { %> <% category.forEach(el => { %>
-            <li>
-              <a class="dropdown-item" href="/menu/category/<%= el.id %>"
-                ><%= el.name.toUpperCase() %></a
-              >
-            </li>
-            <% })} %>
-            <li><a class="dropdown-item" href="/menu">ALL</a></li>
-          </ul>
-        </li>
-        <% if(session.userId){ %>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle text-white"
-            id="menuDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Profile</a
-          >
-          <div class="dropdown-menu" style="width: 270px; padding: 10px">
-            <p>Hello, <%= user.name %>!</p>
-            <p>Balance: <%= user.UserProfile.balance %></p>
-
-            <div class="d-flex justify-content-between">
-              <a
-                type="button"
-                class="btn btn-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-              >
-                Top Up
-              </a>
-              <a class="btn btn-warning" href="/profile">Profile</a>
-              <a class="btn btn-warning" href="/logout">Logout</a>
-            </div>
-          </div>
-          <% } else { %>
-          <a class="nav-link text-white" href="/login">Login</a>
-          <% }%>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/about">About</a>
+          <a class="nav-link text-white" href="/menu">Menu</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/contact">Contact</a>
+          <a class="nav-link text-white" href="/cart">Cart</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/profile">Profile</a>
         </li>
       </ul>
     </div>

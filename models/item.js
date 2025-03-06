@@ -4,8 +4,11 @@ module.exports = (sequelize, DataTypes) => {
   class Item extends Model {
     static associate(models) {
       // define association here
-      Item.belongsTo(models.Category)
-      Item.belongsToMany(models.Cart, { through: models.CartItem })
+      Item.belongsTo(models.Category);
+      Item.belongsToMany(models.Cart, {
+        through: models.CartItem,
+        foreignKey: "ItemId",
+      });
     }
 
     static search(menu) {

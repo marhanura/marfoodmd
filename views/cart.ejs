@@ -5,42 +5,7 @@
     <title>Cart - MarFoodMD</title>
   </head>
   <body class="bg-warning-subtle">
-    <nav
-      class="navbar navbar-expand-lg navbar-light sticky-top"
-      style="background-color: #ffa725"
-    >
-      <div class="container">
-        <a class="navbar-brand fw-bold text-white" href="#">MarFoodMD</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="/menu">Menu</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a class="btn btn-light text-warning" href="/login">Login</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
+    <%- include('./_partial/_navbar') %>
     <div class="container py-5">
       <h2 class="text-center text-warning">Your Cart</h2>
       <div class="row justify-content-center">
@@ -57,48 +22,45 @@
                     <th>Action</th>
                   </tr>
                 </thead>
+                <% let totalPrice = 0; let totalAll =0%>
                 <tbody>
-                  <% let totalPrice = 0; if (cartItems && cartItems.length > 0)
-                  { cartItems.forEach(el => { totalPrice += el.Item.price * cart.quantity; }); }
-                  %>
+                  <% if(cart && cart.length > 0) { cart.forEach(el => {
+                  el.Items.forEach(item => { totalPrice += item.price *
+                  el.quantity; totalAll += totalPrice%>
                   <tr>
-                    <% cartItems.forEach(el => { %>
-                    <td><%= el.Item.name %></td>
+                    <td><%= item.name %></td>
                     <td>
-                      <a href="/cart/<%= cart.id %>/decrease"><button
-                        class="btn btn-sm btn-warning"
+                      <a href="/cart/<%= el.id %>/decrease"
+                        ><button class="btn btn-sm btn-warning">-</button></a
                       >
-                        -
-                      </button></a>
                       <input
                         type="number"
                         class="form-control d-inline text-center w-25"
-                        value="<%= cart.quantity %>"
+                        value="<%= el.quantity %>"
                         min="1"
                       />
-                      <a href="/cart/<%= cart.id %>/increase"><button
-                        class="btn btn-sm btn-warning"
+                      <a href="/cart/<%= el.id %>/increase"
+                        ><button class="btn btn-sm btn-warning">+</button></a
                       >
-                        +
-                      </button></a>
                     </td>
-                    <td><%= formatRupiah(el.Item.price) %></td>
+                    <td><%= formatRupiah(item.price) %></td>
                     <td><%= formatRupiah(totalPrice) %></td>
                     <td>
                       <button class="btn btn-danger btn-sm">Remove</button>
                     </td>
                   </tr>
+                  <% })}) %>
                 </tbody>
               </table>
               <div class="text-end">
                 <h4>
                   Total:
                   <span class="text-warning"
-                    ><%= formatRupiah(totalPrice) %>
+                    ><%= formatRupiah(totalAll) %>
                   </span>
                 </h4>
                 <button class="btn btn-success mt-3">Checkout</button>
-                <% }) %>
+                <% } %>
               </div>
             </div>
           </div>

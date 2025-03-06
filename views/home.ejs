@@ -5,7 +5,123 @@
     <title>Home - MarFoodMD</title>
   </head>
   <body class="bg-warning-subtle">
-    <%- include('./_partial/_navbar') %>
+    <!-- Modal -->
+<div
+class="modal fade"
+id="exampleModal"
+tabindex="-1"
+aria-labelledby="exampleModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5" id="exampleModalLabel">Top Up Balance</h1>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <p>Choose how to top up your balance</p>
+      <input type="radio" name="balance" />
+      <img
+        src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/gopaylater.png"
+        alt="Gopaylater"
+        width="100"
+      />
+      <input type="radio" name="balance" />
+      <img
+        src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/spaylater.png"
+        alt="Spaylater"
+        width="100"
+      />
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- End Modal -->
+<nav
+class="navbar navbar-expand-lg navbar-light"
+style="background-color: #ffa725"
+>
+<div class="container">
+  <img src="<%= '/logo.png' %>" alt="logo" class="img-fluid" width="50" />
+  <a class="navbar-brand fw-bold text-white" href="/">MarFoodMD</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#navbarNav"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle text-white"
+          id="menuDropdown"
+          role="button"
+          data-bs-toggle="dropdown"
+          >Menu Category</a
+        >
+        <ul class="dropdown-menu">
+          <% if(category) { %> <% category.forEach(el => { %>
+          <li>
+            <a class="dropdown-item" href="/menu/category/<%= el.id %>"
+              ><%= el.name.toUpperCase() %></a
+            >
+          </li>
+          <% })} %>
+          <li><a class="dropdown-item" href="/menu">ALL</a></li>
+        </ul>
+      </li>
+      <% if(session.userId){ %>
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle text-white"
+          id="menuDropdown"
+          role="button"
+          data-bs-toggle="dropdown"
+          >Profile</a
+        >
+        <div
+          class="dropdown-menu dropdown-menu-end"
+          style="width: 270px; padding: 10px"
+        >
+          <p>Hello, <%= user.name %>!</p>
+          <p>Balance: <%= formatRupiah(user.UserProfile.balance) %></p>
+          <div class="d-flex justify-content-between">
+            <a
+              type="button"
+              class="btn btn-warning"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              Top Up
+            </a>
+            <a class="btn btn-warning" href="/profile">Profile</a>
+            <a class="btn btn-warning" href="/logout">Logout</a>
+          </div>
+        </div>
+        <% } else { %>
+        <a class="nav-link text-white" href="/login">Login</a>
+        <% }%>
+      </li>
+    </ul>
+      <a href="/cart" class="nav-link text-white">Cart</a></li>
+  </div>
+</div>
+</nav>
+
     <header class="text-center py-5">
       <img
         src="<%= '/logo.png' %>"
@@ -21,7 +137,7 @@
       <a href="#menu" class="btn btn-warning">Order Now</a>
     </header>
     <section id="menu" class="container py-5" style="margin-top: -50px">
-      <h2 class="text-center text-warning">Our Menu</h2>
+      <h2 class="text-center text-warning">Our Best Seller Menu</h2>
       <div id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <% menu.forEach(el => { %>
@@ -66,13 +182,6 @@
         </a>
       </div>
     </section>
-    <footer
-      class="text-white text-center py-3 mt-5"
-      style="background-color: #ffa725"
-    >
-      <p>&copy; 2025 MarFoodMD. All Rights Reserved.</p>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <%- include('./_partial/_footer') %>
   </body>
 </html>

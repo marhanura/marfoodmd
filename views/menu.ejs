@@ -5,6 +5,7 @@
     <title>Menu</title>
   </head>
   <body>
+    <%- include('./_partial/_navbar') %>
     <div class="container-fluid shadow-lg p-4" style="width: 80%">
       <h2 class="text-center text-warning">MENU</h2>
       <a href="/menu/" class="btn btn-success">ALL MENU</a>
@@ -42,9 +43,7 @@
                   ><%= formatRupiah(el.price) %></small
                 >
               </p>
-              <a
-                class="btn btn-success"
-                href="/menu/<%= el.id %>/add"
+              <a class="btn btn-success" href="/menu/<%= el.id %>/add"
                 >Add to Cart</a
               >
             </div>
