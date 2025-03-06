@@ -1,4 +1,4 @@
-const { where } = require("sequelize");
+const formatRupiah = require('../helpers/helper.js')
 const {
   Cart,
   CartItem,
@@ -130,8 +130,14 @@ class Controller {
   }
   static async cart(req, res) {
     try {
+        const data = await Cart.findAll({
+            include: CartItem 
+          });
+        res.send(data)
+        // res.render('cart', {data, formatRupiah})
     } catch (error) {
-      res.send(error);
+        
+      res.send(error.message);
     }
   }
   static async handlerCart(req, res) {
