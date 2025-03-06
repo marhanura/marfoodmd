@@ -1,0 +1,107 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Top Up Balance</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Choose how to top up your balance</p>
+        <img src="../../assets/gopaylater.png" alt="Gopaylater" />
+        <img src="../../assets/spaylater.png" alt="Spaylater" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Modal -->
+<nav
+  class="navbar navbar-expand-lg navbar-light"
+  style="background-color: #ffa725"
+>
+  <div class="container">
+    <a class="navbar-brand fw-bold text-white" href="/">MarFoodMD</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-white"
+            id="menuDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Menu</a
+          >
+          <ul class="dropdown-menu">
+            <% category.forEach(el => { %>
+            <li>
+              <a class="dropdown-item" href="/categories/<%= el.id %>"
+                ><%= el.name %></a
+              >
+            </li>
+            <% }) %>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#">Contact</a>
+        </li>
+        <% if(session.userId){ %>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-white"
+            id="menuDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Profile</a
+          >
+          <div
+            class="dropdown-menu"
+            style="width: 300px; margin-left: -200px; padding: 10px"
+          >
+            <p>Hello, <%= user.name %>!</p>
+            <p>Balance: <%= user.UserProfile.balance %></p>
+            <!-- Button trigger modal -->
+            <button
+              type="button"
+              class="btn btn-outline-warning"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              Top Up Balance
+            </button>
+            <a class="btn btn-warning" href="/profile">See Profile</a>
+          </div>
+          <% } else { %>
+          <a class="btn btn-light text-warning" href="/login">Login</a>
+          <% }%>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
