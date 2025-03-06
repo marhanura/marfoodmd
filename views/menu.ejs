@@ -44,7 +44,7 @@
               </p>
               <a
                 class="btn btn-success"
-                href="/categories/<%= menu.id %>/add/<%= el.id %>"
+                href="/menu/<%= el.id %>/add"
                 >Add to Cart</a
               >
             </div>
@@ -52,7 +52,10 @@
         </div>
       </div>
       <% }) %>
-      <center><a href="/cart" class="btn btn-warning">Go to Cart</a></center>
+      <center>
+        <a href="/" class="btn btn-secondary">Home</a>
+        <a href="/cart" class="btn btn-warning">Go to Cart</a>
+      </center>
     </div>
   </body>
 </html>

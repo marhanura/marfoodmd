@@ -3,7 +3,9 @@ const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Item extends Model {
     static associate(models) {
-      Item.belongsTo(models.Category);
+      // define association here
+      Item.belongsTo(models.Category)
+      Item.belongsToMany(models.Cart, { through: models.CartItem })
     }
 
     static search(menu) {
