@@ -133,24 +133,55 @@ class Controller {
   }
   static async handlerByCategory(req, res) {
     try {
+        let { categoryId } = req.params;
+        let { ItemId, quantity } = req.body;
+        let UserId = req.session.userId;
+        let cart = await Cart.findOne({ where: { UserId}});
+        if (!cart) {
+            cart = await Cart.create({ UserId});
+        }
+        let cartItem = await CartItem.findOne( { where: { CartId: cart.id, ItemId}});
+        if (!cartItem) {
+            await CartItem.create({ CartId: cart.id, ItemId, quantity});
+        }
+        else {
+            await CartItem.update({ quantity}, { where: { CartId: cart.id, ItemId}});
+        }
+        res.redirect('/cart')
     } catch (error) {
       res.send(error);
     }
   }
   static async cart(req, res) {
     try {
-        const data = await Cart.findAll({
-            include: Item, User
-          });
-        res.send(data)
-        // res.render('cart', {data, formatRupiah})
+        let UserId = req.session.userId;
+        let cart = await Cart.findOne({ where: { UserId}});
+        let cartItem = await CartItem.findAll({ where: { CartId: cart.id}, include: Item});
+        let total = 0;
+        cartItem.forEach(el => {
+            total += el.quantity * el.Item.price;
+        });
+        res.render("cart", { cartItem, formatRupiah, total });
     } catch (error) {
-        
       res.send(error.message);
     }
   }
   static async handlerCart(req, res) {
     try {
+        let { ItemId, quantity } = req.body;
+        let UserId = req.session.userId;
+        let cart = await Cart.findOne({ where: { UserId}});
+        if (!cart) {
+            cart = await Cart.create({ UserId});
+        }
+        let cartItem = await CartItem.findOne( { where: { CartId: cart.id, ItemId}});
+        if (!cartItem) {
+            await CartItem.create({ CartId: cart.id, ItemId, quantity});
+        }
+        else {
+            await CartItem.update({ quantity}, { where: { CartId: cart.id, ItemId}});
+        }
+        res.redirect('/cart')
     } catch (error) {
       res.send(error);
     }

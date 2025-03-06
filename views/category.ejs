@@ -12,10 +12,13 @@
             <div class="col">
       <div class="card" onclick="location.href='/categories/<%= el.id %>'">
         <img src="<%= el.Items[0].imgUrl %>" class="card-img-top" alt="<%= el.name %>" style="height: 400px">
+        <button>+</button>
+        <button>-</button>
+      </div>
         <div class="card-body">
           <a class="btn btn-warning" href="/categories/<%= el.id %>"><%= el.name %></a>
         </div>
-      </div></div>
+      </div>
       <% }) %>
     </div>
   </body>
