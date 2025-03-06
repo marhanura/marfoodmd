@@ -7,7 +7,7 @@ const e = require("express")
 class Controller {
     static async home(req, res){
         try {
-            res.send("HALOOO!!!")
+            res.render('home')
         } catch (error) {
             res.send(error)
         }
@@ -108,7 +108,8 @@ class Controller {
     }
     static async profile(req, res){
         try {
-
+            let data = await User.findAll()
+            res.send(data)
         } catch (error) {
             res.send(error)
         }
