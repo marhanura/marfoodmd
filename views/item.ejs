@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./_partial/_head') %>
+    <title>Menu</title>
+  </head>
+  <body>
+    <div class="container-fluid shadow-lg p-4" style="width: 80%">
+      <h2 class="text-center text-warning">Menu</h2>
+      <div class="card mb-3" style="max-width: 540px;">
+          <% data.forEach(el => { %>
+          <div class="row g-0">
+              <div class="col-md-4">
+                    <img src="<%= el.imgUrl %>" class="img-fluid rounded-start" alt="<%= el.name %>">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= el.name %></h5>
+                      <p class="card-text"><%= el.description %></p>
+                      <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+              </div>
+  </body>
+</html>
