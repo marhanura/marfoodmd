@@ -1,4 +1,4 @@
-// CONTROLLER
+const { where } = require("sequelize");
 const formatRupiah = require("../helpers/helper.js");
 const {
   Cart,
@@ -134,6 +134,25 @@ class Controller {
   }
   static async handlerByCategory(req, res) {
     try {
+      let { categoryId } = req.params;
+      let { ItemId, quantity } = req.body;
+      let UserId = req.session.userId;
+      let cart = await Cart.findOne({ where: { UserId } });
+      if (!cart) {
+        cart = await Cart.create({ UserId });
+      }
+      let cartItem = await CartItem.findOne({
+        where: { CartId: cart.id, ItemId },
+      });
+      if (!cartItem) {
+        await CartItem.create({ CartId: cart.id, ItemId, quantity });
+      } else {
+        await CartItem.update(
+          { quantity },
+          { where: { CartId: cart.id, ItemId } }
+        );
+      }
+      res.redirect("/cart");
     } catch (error) {
       res.send(error);
     }
@@ -162,6 +181,24 @@ class Controller {
   }
   static async handlerCart(req, res) {
     try {
+      let { ItemId, quantity } = req.body;
+      let UserId = req.session.userId;
+      let cart = await Cart.findOne({ where: { UserId } });
+      if (!cart) {
+        cart = await Cart.create({ UserId });
+      }
+      let cartItem = await CartItem.findOne({
+        where: { CartId: cart.id, ItemId },
+      });
+      if (!cartItem) {
+        await CartItem.create({ CartId: cart.id, ItemId, quantity });
+      } else {
+        await CartItem.update(
+          { quantity },
+          { where: { CartId: cart.id, ItemId } }
+        );
+      }
+      res.redirect("/cart");
     } catch (error) {
       res.send(error);
     }
