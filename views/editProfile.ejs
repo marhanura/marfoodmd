@@ -20,18 +20,6 @@
           </div>
         </div>
         <div class="mb-3">
-          <label class="form-label">Balance</label>
-          <div class="input-group">
-            <input
-              type="number"
-              name="balance"
-              class="form-control"
-              value="<%= data.UserProfile.balance %>"
-              disabled
-            />
-          </div>
-        </div>
-        <div class="mb-3">
           <label class="form-label">Email</label>
           <div class="input-group">
             <input
@@ -56,6 +44,18 @@
           </div>
         </div>
         <div class="mb-3">
+          <label class="form-label">Balance</label>
+          <div class="input-group">
+            <input
+              type="number"
+              name="balance"
+              class="form-control"
+              value="<%= data.UserProfile.balance %>"
+              disabled
+            />
+          </div>
+        </div>
+        <div class="mb-3">
           <label class="form-label">Address</label>
           <div class="input-group">
             <textarea
@@ -63,7 +63,10 @@
               class="form-control"
               value="<%= data.UserProfile.address %>"
               placeholder="Please fill in your address"
-            ></textarea>
+            >
+<%= data.UserProfile.address %>
+              </textarea
+            >
           </div>
         </div>
         <div class="mb-3">

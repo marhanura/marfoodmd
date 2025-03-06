@@ -77,12 +77,17 @@ class Controller {
   }
   static async categoriesMenu(req, res) {
     try {
+      let data = await Category.findAll({ include: Item });
+      res.render("category", { data });
     } catch (error) {
       res.send(error);
     }
   }
   static async renderByCategory(req, res) {
     try {
+      let { categoryId } = req.params;
+      let data = await Item.findAll({ where: { CategoryId: categoryId } });
+      res.render("item", { data });
     } catch (error) {
       res.send(error);
     }
@@ -139,6 +144,30 @@ class Controller {
   }
   static async handlerEditProfile(req, res) {
     try {
+      let id = req.session.userId;
+      let { name, email, password, address, phoneNumber } = req.body;
+      await User.update(
+        {
+          name,
+          email,
+          password,
+        },
+        { where: { id } }
+      );
+      await UserProfile.update(
+        {
+          address,
+          phoneNumber,
+        },
+        {
+          where: { UserId: id },
+        }
+      );
+      let data = await User.findByPk(id, {
+        include: UserProfile,
+      });
+      res.render(data);
+      // res.redirect("/profile/edit", { data });
     } catch (error) {
       res.send(error);
     }
