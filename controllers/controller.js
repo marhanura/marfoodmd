@@ -11,13 +11,18 @@ const bcrypt = require("bcryptjs");
 const e = require("express");
 
 class Controller {
-    static async home(req, res){
-        try {
-            res.render('home')
-        } catch (error) {
-            res.send(error)
-        }
+  static async home(req, res) {
+    try {
+      let category = await Category.findAll();
+      let session = req.session;
+      let user = await User.findByPk(req.session.userId, {
+        include: UserProfile,
+      });
+      res.render("home", { category, session, user });
+    } catch (error) {
+      res.send(error);
     }
+  }
   static async renderLogin(req, res) {
     try {
       res.render("login");
