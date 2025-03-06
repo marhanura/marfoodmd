@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./_partial/_head') %>
+    <title>User Profile</title>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg shadow-lg p-4"
+      style="background-color: #ffa725"
+    >
+      <div class="container">
+        <img src="<%= '/logo.png' %>" alt="logo" class="img-fluid" width="50" />
+        <a class="navbar-brand fw-bold text-white" href="/">MarFoodMD</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid shadow-lg p-4" style="width: 80%">
+      <h2 class="text-center text-warning">User Profile</h2>
+      <form action="/profile/edit" method="post">
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <div class="input-group">
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              value="<%= data.name %>"
+              disabled
+            />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <div class="input-group">
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              value="<%= data.email %>"
+              disabled
+            />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Balance</label>
+          <div class="input-group d-flex">
+            <input
+              type="number"
+              name="balance"
+              class="form-control"
+              value="<%= data.UserProfile.balance %>"
+              disabled
+            />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Address</label>
+          <div class="input-group">
+            <textarea
+              name="address"
+              class="form-control"
+              value="<%= data.UserProfile.address %>"
+              disabled
+            >
+<%= data.UserProfile.address %>
+            </textarea>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Phone Number</label>
+          <div class="input-group">
+            <input
+              type="text"
+              name="phoneNumber"
+              class="form-control"
+              value="<%= data.UserProfile.phoneNumber %>"
+              disabled
+            />
+          </div>
+        </div>
+        <a href="/profile/edit" type="submit" class="btn btn-warning w-100">
+          Edit Profile
+        </a>
+      </form>
+    </div>
+  </body>
+</html>
