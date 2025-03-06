@@ -19,8 +19,18 @@
       </div>
       <div class="modal-body">
         <p>Choose how to top up your balance</p>
-        <img src="../../assets/gopaylater.png" alt="Gopaylater" />
-        <img src="../../assets/spaylater.png" alt="Spaylater" />
+        <input type="radio" />
+        <img
+          src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/gopaylater.png"
+          alt="Gopaylater"
+          width="100"
+        />
+        <input type="radio" />
+        <img
+          src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/spaylater.png"
+          alt="Spaylater"
+          width="100"
+        />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -36,6 +46,7 @@
   style="background-color: #ffa725"
 >
   <div class="container">
+    <img src="<%= '/logo.png' %>" alt="logo" class="img-fluid" width="50" />
     <a class="navbar-brand fw-bold text-white" href="/">MarFoodMD</a>
     <button
       class="navbar-toggler"
@@ -65,12 +76,6 @@
             <% }) %>
           </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="#">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="#">Contact</a>
-        </li>
         <% if(session.userId){ %>
         <li class="nav-item dropdown">
           <a
@@ -80,26 +85,32 @@
             data-bs-toggle="dropdown"
             >Profile</a
           >
-          <div
-            class="dropdown-menu"
-            style="width: 300px; margin-left: -200px; padding: 10px"
-          >
+          <div class="dropdown-menu" style="width: 270px; padding: 10px">
             <p>Hello, <%= user.name %>!</p>
             <p>Balance: <%= user.UserProfile.balance %></p>
-            <!-- Button trigger modal -->
-            <button
-              type="button"
-              class="btn btn-outline-warning"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              Top Up Balance
-            </button>
-            <a class="btn btn-warning" href="/profile">See Profile</a>
+
+            <div class="d-flex justify-content-between">
+              <a
+                type="button"
+                class="btn btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                Top Up
+              </a>
+              <a class="btn btn-warning" href="/profile">Profile</a>
+              <a class="btn btn-warning" href="/logout">Logout</a>
+            </div>
           </div>
           <% } else { %>
-          <a class="btn btn-light text-warning" href="/login">Login</a>
+          <a class="nav-link text-white" href="/login">Login</a>
           <% }%>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/contact">Contact</a>
         </li>
       </ul>
     </div>

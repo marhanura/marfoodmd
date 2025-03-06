@@ -14,15 +14,30 @@ class Controller {
   static async home(req, res) {
     try {
       let category = await Category.findAll();
+      let menu = await Item.findAll();
       let session = req.session;
       let user = await User.findByPk(req.session.userId, {
         include: UserProfile,
       });
-      res.render("home", { category, session, user });
+      res.render("home", { category, menu, session, user });
     } catch (error) {
       res.send(error);
     }
   }
+
+  static async construction(req, res) {
+    try {
+      let category = await Category.findAll();
+      let session = req.session;
+      let user = await User.findByPk(req.session.userId, {
+        include: UserProfile,
+      });
+      res.render("construction", { category, session, user });
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
   static async renderLogin(req, res) {
     try {
       res.render("login");
@@ -39,8 +54,6 @@ class Controller {
         if (isValidPassword) {
           req.session.userId = user.id;
           req.session.role = user.role;
-          console.log(req.session);
-
           res.redirect("/");
         } else {
           const error = "Invalid password";
@@ -57,10 +70,11 @@ class Controller {
 
   static async renderRegister(req, res) {
     try {
+      let { error } = req.query;
       if (req.session.userId) {
         res.redirect("/");
       } else {
-        res.render("register");
+        res.render("register", { error });
       }
     } catch (error) {
       res.send(error);
@@ -77,7 +91,12 @@ class Controller {
       });
       res.redirect("/login");
     } catch (error) {
-      res.send(error);
+      if (error.name === "SequelizeValidationError") {
+        let errors = error.errors.map((el) => el.message);
+        res.redirect(`/register?error=${errors}`);
+      } else {
+        res.send(error);
+      }
     }
   }
   static async categoriesMenu(req, res) {

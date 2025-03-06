@@ -25,6 +25,8 @@ router.post("/register", Controller.handlerRegister);
 router.get("/login", Controller.renderLogin);
 router.post("/login", Controller.handlerLogin);
 router.get("/logout", Controller.logout);
+router.get("/about", Controller.construction);
+router.get("/contact", Controller.construction);
 router.get("/", Controller.home);
 router.get("/categories", Controller.categoriesMenu);
 router.get("/categories/:categoryId", Controller.renderByCategory);
