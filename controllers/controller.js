@@ -20,7 +20,7 @@ class Controller {
       let user = await User.findByPk(req.session.userId, {
         include: UserProfile,
       });
-      res.render("home", { category, menu, session, user });
+      res.render("home", { category, menu, session, user, formatRupiah });
     } catch (error) {
       res.send(error);
     }
@@ -33,7 +33,7 @@ class Controller {
       let user = await User.findByPk(req.session.userId, {
         include: UserProfile,
       });
-      res.render("construction", { category, session, user });
+      res.render("construction", { category, session, user, formatRupiah });
     } catch (error) {
       res.send(error);
     }
@@ -177,11 +177,17 @@ class Controller {
     try {
       let { categoryId, itemId } = req.params;
       let cart = await Cart.findAll({ where: { ItemId: itemId } });
-      await Cart.create({ ItemId: itemId, UserId: req.session.userId, quantity: 1})
+      let newCart = await Cart.create({
+        ItemId: itemId,
+        UserId: req.session.userId,
+        quantity: 1,
+      });
+      await CartItem.create({
+        ItemId: itemId,
+        CartId: newCart.id,
+      });
       res.redirect(`/menu`);
     } catch (error) {
-      console.log(error);
-      
       res.send(error);
     }
   }
@@ -189,17 +195,11 @@ class Controller {
   static async cart(req, res) {
     try {
       let UserId = req.session.userId;
-      let cart = await Cart.findAll({ where: { UserId }}, {include: Item} );
-      let cartItems = await Cart.findAll({
-        include: {
-          model: CartItem,
-          include: Item,
-        }
-      });
+      let cart = await Cart.findAll({ include: Item }, { where: { UserId } });
+      let cartItems = await CartItem.findAll();
       let user = await User.findByPk(req.session.userId, {
-        include: UserProfile
+        include: UserProfile,
       });
-      res.send(cart)
       res.render("cart", { cartItems, formatRupiah, user, cart });
     } catch (error) {
       res.send(error.message);
@@ -270,19 +270,19 @@ class Controller {
     try {
       let { id } = req.params;
       await Cart.destroy({ where: { id: id } })
-      .then(deleted => {
+        .then((deleted) => {
           if (deleted) {
-              return Cart.findAll();
+            return Cart.findAll();
           } else {
-              throw new Error('Item not found');
+            throw new Error("Item not found");
           }
-      })
-      .then(updatedCart => {
-          res.json({ message: 'Item deleted', cart: updatedCart });
-      })
-      .catch(error => {
+        })
+        .then((updatedCart) => {
+          res.json({ message: "Item deleted", cart: updatedCart });
+        })
+        .catch((error) => {
           res.status(500).json({ error: error.message });
-      });
+        });
       res.redirect("/cart");
     } catch (error) {
       res.send(error);

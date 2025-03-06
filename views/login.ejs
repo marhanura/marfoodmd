@@ -16,8 +16,13 @@
         width="100"
         style="margin: auto"
       />
-      <h2 class="text-center text-warning">Login to Account</h2>
-      <p class="text-center text-muted mb-4">Login to continue</p>
+      <h2 class="text-center text-warning">Log In</h2>
+      <p class="text-center text-muted mb-4">Log in to your account</p>
+      <% if (error) { %>
+        <div class="alert alert-danger" role="alert" style="padding-bottom: 0">
+          <p><%= error %></p>
+        </div>
+        <% } %>
       <form action="/login" method="POST">
         <div class="mb-3">
           <label for="email" class="form-label">Email Address</label>
