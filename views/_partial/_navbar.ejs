@@ -19,13 +19,13 @@
       </div>
       <div class="modal-body">
         <p>Choose how to top up your balance</p>
-        <input type="radio" />
+        <input type="radio" name="balance" />
         <img
           src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/gopaylater.png"
           alt="Gopaylater"
           width="100"
         />
-        <input type="radio" />
+        <input type="radio" name="balance" />
         <img
           src="https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/spaylater.png"
           alt="Spaylater"
@@ -67,13 +67,13 @@
             >Menu</a
           >
           <ul class="dropdown-menu">
-            <% category.forEach(el => { %>
+            <% if(category) { %> <% category.forEach(el => { %>
             <li>
               <a class="dropdown-item" href="/categories/<%= el.id %>"
                 ><%= el.name %></a
               >
             </li>
-            <% }) %>
+            <% })} %>
           </ul>
         </li>
         <% if(session.userId){ %>

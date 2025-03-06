@@ -1,6 +1,6 @@
 const Controller = require("../controllers/controller");
 const router = require("express").Router();
-const session = require("express-session");
+const routerProfile = require("./profile");
 
 const isLoggedIn = function (req, res, next) {
   if (!req.session.userId) {
@@ -35,8 +35,6 @@ router.get("/cart", Controller.cart);
 router.post("/cart", Controller.handlerCart);
 router.get("/cart/:id/delete", Controller.deleteCart);
 router.get("/success", Controller.renderInvoice);
-router.get("/profile/", isLoggedIn, Controller.profile);
-router.get("/profile/edit", isLoggedIn, Controller.editProfile);
-router.post("/profile/edit", isLoggedIn, Controller.handlerEditProfile);
+router.get("/profile/", isLoggedIn, routerProfile);
 
 module.exports = router;
