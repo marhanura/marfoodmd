@@ -1,5 +1,5 @@
-const { where } = require('sequelize');
-const formatRupiah = require('../helpers/helper.js')
+const { where } = require("sequelize");
+const formatRupiah = require("../helpers/helper.js");
 const {
   Cart,
   CartItem,
@@ -115,7 +115,8 @@ class Controller {
       }
     }
   }
-  static async categoriesMenu(req, res) {
+
+  static async categories(req, res) {
     try {
       let data = await Category.findAll({ include: Item });
       res.render("category", { data });
@@ -123,66 +124,95 @@ class Controller {
       res.send(error);
     }
   }
-  static async renderByCategory(req, res) {
+
+  static async allMenu(req, res) {
+    try {
+      let menu = await Item.findAll();
+      let categories = await Category.findAll();
+      res.render("menu", { menu, categories, formatRupiah });
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
+  static async menuByCategory(req, res) {
     try {
       let { categoryId } = req.params;
-      let data = await Item.findAll({ where: { CategoryId: categoryId } });
-      res.render("item", { data });
+      let menu = await Item.findAll({ where: { CategoryId: categoryId } });
+      let categories = await Category.findAll();
+      res.render("menu", { menu, categories, formatRupiah });
     } catch (error) {
       res.send(error);
     }
   }
+
   static async handlerByCategory(req, res) {
     try {
-        let { categoryId } = req.params;
-        let { ItemId, quantity } = req.body;
-        let UserId = req.session.userId;
-        let cart = await Cart.findOne({ where: { UserId}});
-        if (!cart) {
-            cart = await Cart.create({ UserId});
-        }
-        let cartItem = await CartItem.findOne( { where: { CartId: cart.id, ItemId}});
-        if (!cartItem) {
-            await CartItem.create({ CartId: cart.id, ItemId, quantity});
-        }
-        else {
-            await CartItem.update({ quantity}, { where: { CartId: cart.id, ItemId}});
-        }
-        res.redirect('/cart')
+      let { categoryId } = req.params;
+      let { ItemId, quantity } = req.body;
+      let UserId = req.session.userId;
+      let cart = await Cart.findOne({ where: { UserId } });
+      if (!cart) {
+        cart = await Cart.create({ UserId });
+      }
+      let cartItem = await CartItem.findOne({
+        where: { CartId: cart.id, ItemId },
+      });
+      if (!cartItem) {
+        await CartItem.create({ CartId: cart.id, ItemId, quantity });
+      } else {
+        await CartItem.update(
+          { quantity },
+          { where: { CartId: cart.id, ItemId } }
+        );
+      }
+      res.redirect("/cart");
     } catch (error) {
       res.send(error);
     }
   }
+
+  static async addToCart(req, res) {
+    try {
+      let { categoryId, itemId } = req.params;
+      let cart = await Cart.findAll({ where: { ItemId: itemId } });
+      res.redirect(`/categories/${categoryId}`);
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
   static async cart(req, res) {
     try {
-        let UserId = req.session.userId;
-        let cart = await Cart.findOne({ where: { UserId}});
-        let cartItem = await CartItem.findAll({ where: { CartId: cart.id}, include: Item});
-        let total = 0;
-        cartItem.forEach(el => {
-            total += el.quantity * el.Item.price;
-        });
-        res.render("cart", { cartItem, formatRupiah, total });
+      const data = await Cart.findAll({
+        include: CartItem,
+      });
+      res.send(data);
+      // res.render('cart', {data, formatRupiah})
     } catch (error) {
       res.send(error.message);
     }
   }
   static async handlerCart(req, res) {
     try {
-        let { ItemId, quantity } = req.body;
-        let UserId = req.session.userId;
-        let cart = await Cart.findOne({ where: { UserId}});
-        if (!cart) {
-            cart = await Cart.create({ UserId});
-        }
-        let cartItem = await CartItem.findOne( { where: { CartId: cart.id, ItemId}});
-        if (!cartItem) {
-            await CartItem.create({ CartId: cart.id, ItemId, quantity});
-        }
-        else {
-            await CartItem.update({ quantity}, { where: { CartId: cart.id, ItemId}});
-        }
-        res.redirect('/cart')
+      let { ItemId, quantity } = req.body;
+      let UserId = req.session.userId;
+      let cart = await Cart.findOne({ where: { UserId } });
+      if (!cart) {
+        cart = await Cart.create({ UserId });
+      }
+      let cartItem = await CartItem.findOne({
+        where: { CartId: cart.id, ItemId },
+      });
+      if (!cartItem) {
+        await CartItem.create({ CartId: cart.id, ItemId, quantity });
+      } else {
+        await CartItem.update(
+          { quantity },
+          { where: { CartId: cart.id, ItemId } }
+        );
+      }
+      res.redirect("/cart");
     } catch (error) {
       res.send(error);
     }

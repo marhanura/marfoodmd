@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./_partial/_head') %>
+    <title>Menu</title>
+  </head>
+  <body>
+    <div class="container-fluid shadow-lg p-4" style="width: 80%">
+      <h2 class="text-center text-warning">MENU</h2>
+      <a href="/menu/" class="btn btn-success">ALL MENU</a>
+      <% categories.forEach(cat => { %>
+      <a href="/menu/category/<%= cat.id %>" class="btn btn-success"
+        ><%= cat.name.toUpperCase() %></a
+      >
+      <% }) %>
+      <form class="form-inline">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Search menu..."
+        />
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          Search
+        </button>
+      </form>
+      <% menu.forEach(el => { %>
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img
+              src="<%= el.imgUrl %>"
+              class="img-fluid rounded-start"
+              alt="<%= el.name %>"
+              width="300"
+            />
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><%= el.name %></h5>
+              <p class="card-text"><%= el.description %></p>
+              <p class="card-text">
+                <small class="text-body-secondary"
+                  ><%= formatRupiah(el.price) %></small
+                >
+              </p>
+              <a
+                class="btn btn-success"
+                href="/categories/<%= menu.id %>/add/<%= el.id %>"
+                >Add to Cart</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+      <center><a href="/cart" class="btn btn-warning">Go to Cart</a></center>
+    </div>
+  </body>
+</html>

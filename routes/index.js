@@ -1,3 +1,5 @@
+// INDEX
+
 const Controller = require("../controllers/controller");
 const router = require("express").Router();
 const routerProfile = require("./profile");
@@ -28,9 +30,10 @@ router.get("/logout", Controller.logout);
 router.get("/about", Controller.construction);
 router.get("/contact", Controller.construction);
 router.get("/", Controller.home);
-router.get("/categories", Controller.categoriesMenu);
-router.get("/categories/:categoryId", Controller.renderByCategory);
-router.post("/categories/:categoryId", Controller.handlerByCategory);
+router.get("/menu", Controller.allMenu);
+router.get("/menu/:itemId/add", Controller.addToCart);
+router.get("/menu/category/:categoryId", Controller.menuByCategory);
+router.get("/categories", Controller.categories);
 router.get("/cart", Controller.cart);
 router.post("/cart", Controller.handlerCart);
 router.get("/cart/:id/delete", Controller.deleteCart);
