@@ -58,6 +58,10 @@
                 class="form-control"
                 placeholder="Password"
               />
+              <i
+                class="bi bi-eye-slash input-group-text"
+                id="togglePassword"
+              ></i>
             </div>
           </div>
           <div class="mb-3">
@@ -77,4 +81,14 @@
       </div>
     </div>
   </body>
+  <script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+    togglePassword.addEventListener("click", () => {
+      const type =
+        password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+      this.classList.toggle("bi-eye");
+    });
+  </script>
 </html>

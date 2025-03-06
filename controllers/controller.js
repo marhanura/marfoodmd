@@ -41,7 +41,11 @@ class Controller {
 
   static async renderLogin(req, res) {
     try {
-      res.render("login");
+      let { error } = req.query;
+      if (error) {
+        error = error.split(",").join(" ");
+      }
+      res.render("login", { error });
     } catch (error) {
       res.send(error);
     }
@@ -65,7 +69,12 @@ class Controller {
         res.redirect(`/login?error=${error}`);
       }
     } catch (error) {
-      res.send(error);
+      if (error.name === "SequelizeValidationError") {
+        let errors = error.errors.map((el) => el.message);
+        res.redirect(`/register?error=${errors}`);
+      } else {
+        res.send(error);
+      }
     }
   }
 
