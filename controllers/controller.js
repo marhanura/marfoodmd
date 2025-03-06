@@ -115,6 +115,7 @@ class Controller {
       }
     }
   }
+
   static async categories(req, res) {
     try {
       let data = await Category.findAll({ include: Item });
@@ -123,15 +124,28 @@ class Controller {
       res.send(error);
     }
   }
-  static async renderByCategory(req, res) {
+
+  static async allMenu(req, res) {
     try {
-      let { categoryId } = req.params;
-      let data = await Category.findByPk(categoryId, { include: Item });
-      res.render("menu", { data, formatRupiah });
+      let menu = await Item.findAll();
+      let categories = await Category.findAll();
+      res.render("menu", { menu, categories, formatRupiah });
     } catch (error) {
       res.send(error);
     }
   }
+
+  static async menuByCategory(req, res) {
+    try {
+      let { categoryId } = req.params;
+      let menu = await Item.findAll({ where: { CategoryId: categoryId } });
+      let categories = await Category.findAll();
+      res.render("menu", { menu, categories, formatRupiah });
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
   static async handlerByCategory(req, res) {
     try {
       let { categoryId } = req.params;

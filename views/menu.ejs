@@ -6,10 +6,24 @@
   </head>
   <body>
     <div class="container-fluid shadow-lg p-4" style="width: 80%">
-      <h2 class="text-center text-warning">
-        MENU <%= data.name.toUpperCase() %>
-      </h2>
-      <% data.Items.forEach(el => { %>
+      <h2 class="text-center text-warning">MENU</h2>
+      <a href="/menu/" class="btn btn-success">ALL MENU</a>
+      <% categories.forEach(cat => { %>
+      <a href="/menu/category/<%= cat.id %>" class="btn btn-success"
+        ><%= cat.name.toUpperCase() %></a
+      >
+      <% }) %>
+      <form class="form-inline">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Search menu..."
+        />
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          Search
+        </button>
+      </form>
+      <% menu.forEach(el => { %>
       <div class="card mb-3">
         <div class="row g-0">
           <div class="col-md-4">
@@ -31,7 +45,7 @@
               </p>
               <a
                 class="btn btn-success"
-                href="/categories/<%= data.id %>/add/<%= el.id %>"
+                href="/categories/<%= menu.id %>/add/<%= el.id %>"
                 >Add to Cart</a
               >
             </div>
