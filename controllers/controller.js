@@ -11,13 +11,13 @@ const bcrypt = require("bcryptjs");
 const e = require("express");
 
 class Controller {
-  static async home(req, res) {
-    try {
-      res.send("HALOOO!!!");
-    } catch (error) {
-      res.send(error);
+    static async home(req, res){
+        try {
+            res.render('home')
+        } catch (error) {
+            res.send(error)
+        }
     }
-  }
   static async renderLogin(req, res) {
     try {
       res.render("login");
