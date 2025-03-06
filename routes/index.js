@@ -35,6 +35,8 @@ router.get("/menu/:itemId/add", Controller.addToCart);
 router.get("/menu/category/:categoryId", Controller.menuByCategory);
 router.get("/categories", Controller.categories);
 router.get("/cart", Controller.cart);
+router.get("/cart/:id/increase", Controller.increaseCart);
+router.get("/cart/:id/decrease", Controller.decreaseCart);
 router.post("/cart", Controller.handlerCart);
 router.get("/cart/:id/delete", Controller.deleteCart);
 router.get("/success", Controller.renderInvoice);

@@ -176,23 +176,71 @@ class Controller {
     try {
       let { categoryId, itemId } = req.params;
       let cart = await Cart.findAll({ where: { ItemId: itemId } });
-      res.redirect(`/categories/${categoryId}`);
+      await Cart.create({ ItemId: itemId, UserId: req.session.userId, quantity: 1})
+      res.redirect(`/menu`);
     } catch (error) {
+      console.log(error);
+      
       res.send(error);
     }
   }
 
   static async cart(req, res) {
     try {
-      const data = await Cart.findAll({
-        include: CartItem,
+      let UserId = req.session.userId;
+      let cart = await Cart.findAll({ where: { UserId }}, {include: Item} );
+      let cartItems = await Cart.findAll({
+        include: {
+          model: CartItem,
+          include: Item,
+        }
       });
-      res.send(data);
-      // res.render('cart', {data, formatRupiah})
+      let user = await User.findByPk(req.session.userId, {
+        include: UserProfile
+      });
+      res.send(cart)
+      res.render("cart", { cartItems, formatRupiah, user, cart });
     } catch (error) {
       res.send(error.message);
     }
   }
+  static async increaseCart(req, res) {
+    try {
+      const { id } = req.params;
+      await Cart.increment(
+        {
+          quantity: 1,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+      res.redirect("/cart");
+    } catch (error) {
+      res.send(error);
+    }
+  }
+  static async decreaseCart(req, res) {
+    try {
+      const { id } = req.params;
+      await Cart.decrement(
+        {
+          quantity: 1,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+      res.redirect("/cart");
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
   static async handlerCart(req, res) {
     try {
       let { ItemId, quantity } = req.body;
@@ -219,6 +267,22 @@ class Controller {
   }
   static async deleteCart(req, res) {
     try {
+      let { id } = req.params;
+      await Cart.destroy({ where: { id: id } })
+      .then(deleted => {
+          if (deleted) {
+              return Cart.findAll();
+          } else {
+              throw new Error('Item not found');
+          }
+      })
+      .then(updatedCart => {
+          res.json({ message: 'Item deleted', cart: updatedCart });
+      })
+      .catch(error => {
+          res.status(500).json({ error: error.message });
+      });
+      res.redirect("/cart");
     } catch (error) {
       res.send(error);
     }
