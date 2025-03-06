@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const formatRupiah = require('../helpers/helper.js')
 const {
   Cart,
