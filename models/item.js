@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       }
       return Item.findAll(option);
     }
+
+    get menuCapital(){
+      let name = this.getDataValue('name')
+      return String(name).charAt(0).toUpperCase() + String(name).slice(1)
+    }
   }
   Item.init(
     {

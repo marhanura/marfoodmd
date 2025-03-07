@@ -77,11 +77,11 @@ style="background-color: #ffa725"
           <% if(category) { %> <% category.forEach(el => { %>
           <li>
             <a class="dropdown-item" href="/menu/category/<%= el.id %>"
-              ><%= el.name.toUpperCase() %></a
+              ><%= el.menuCapital %></a
             >
           </li>
           <% })} %>
-          <li><a class="dropdown-item" href="/menu">ALL</a></li>
+          <li><a class="dropdown-item" href="/menu">All</a></li>
         </ul>
       </li>
       <% if(session.userId){ %>

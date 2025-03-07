@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Category.hasMany(models.Item);
     }
+    get menuCapital(){
+      let name = this.getDataValue('name')
+      return String(name).charAt(0).toUpperCase() + String(name).slice(1)
+    }
   }
   Category.init(
     {
