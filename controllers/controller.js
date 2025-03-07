@@ -10,6 +10,7 @@ const {
 } = require("../models");
 const bcrypt = require("bcryptjs");
 const e = require("express");
+const easyinvoice = require("easyinvoice");
 
 class Controller {
   static async home(req, res) {
@@ -20,7 +21,7 @@ class Controller {
       let user = await User.findByPk(req.session.userId, {
         include: UserProfile,
       });
-      res.render("home", { category, menu, session, user });
+      res.render("home", { category, menu, session, user, formatRupiah });
     } catch (error) {
       res.send(error);
     }
@@ -33,7 +34,7 @@ class Controller {
       let user = await User.findByPk(req.session.userId, {
         include: UserProfile,
       });
-      res.render("construction", { category, session, user });
+      res.render("construction", { category, session, user, formatRupiah });
     } catch (error) {
       res.send(error);
     }
@@ -127,9 +128,11 @@ class Controller {
 
   static async allMenu(req, res) {
     try {
-      let menu = await Item.findAll();
+      let { search } = req.query;
+      let menu = await Item.search(search);
       let categories = await Category.findAll();
-      res.render("menu", { menu, categories, formatRupiah });
+      let cartUser = await Cart.findAll({ include: User });
+      res.render("menu", { menu, categories, cartUser, formatRupiah });
     } catch (error) {
       res.send(error);
     }
@@ -176,30 +179,31 @@ class Controller {
     try {
       let { categoryId, itemId } = req.params;
       let cart = await Cart.findAll({ where: { ItemId: itemId } });
-      await Cart.create({ ItemId: itemId, UserId: req.session.userId, quantity: 1})
+      let newCart = await Cart.create({
+        ItemId: itemId,
+        UserId: req.session.userId,
+        quantity: 1,
+      });
+      await CartItem.create({
+        ItemId: itemId,
+        CartId: newCart.id,
+      });
       res.redirect(`/menu`);
     } catch (error) {
-      console.log(error);
-      
       res.send(error);
     }
   }
 
   static async cart(req, res) {
     try {
-      let category = await Category.findAll();
-      let menu = await Item.findAll();
-      let session = req.session;
+      let { deleted } = req.query;
       let UserId = req.session.userId;
-      let cart = await Cart.findOne({ where: { UserId } });
-      let cartItems = await CartItem.findAll({
-        where: { CartId: cart.id },
-        include: Item
-      });
+      let cart = await Cart.findAll({ include: Item }, { where: { UserId } });
+      let cartItems = await CartItem.findAll();
       let user = await User.findByPk(req.session.userId, {
-        include: UserProfile
+        include: UserProfile,
       });
-      res.render("cart", { cartItems, formatRupiah, user, cart, category, menu, session });
+      res.render("cart", { cartItems, deleted, formatRupiah, user, cart });
     } catch (error) {
       res.send(error.message);
     }
@@ -267,30 +271,105 @@ class Controller {
   }
   static async deleteCart(req, res) {
     try {
-      let id = req.session; 
-      await Cart.destroy({ where: { id } })
-        .then(item => {
-          if (!item) {
-            req.flash('error', 'Item tidak ditemukan.');
-          } else {
-            req.flash('success', 'Item berhasil dihapus.');
-          }
-          res.redirect('/cart');
-        })
-        .catch(err => {
-          req.flash('error', 'Terjadi kesalahan saat menghapus item.');
-          res.redirect('/cart');
-        });
+      let { id } = req.params;
+      let data = await Cart.findByPk(id, { include: Item });
+      let deleted = "";
+      data.Items.map((el) => (deleted = el.name));
+      await CartItem.destroy({ where: { CartId: id } });
+      await Cart.destroy({
+        where: {
+          id: id,
+        },
+      });
+      res.redirect(`/cart?deleted=${deleted}`);
     } catch (error) {
       res.send(error);
     }
   }
+
+  static async success(req, res) {
+    try {
+      const userId = req.session.userId;
+      let cart = await Cart.findAll(
+        { include: Item },
+        { where: { UserId: userId } }
+      );
+      cart.forEach((el) => {
+        CartItem.destroy({ where: { CartId: el.id } });
+      });
+      await Cart.destroy({ where: { UserId: userId } });
+      res.render("success");
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
   static async renderInvoice(req, res) {
     try {
+      const userId = req.session.userId;
+      const user = await User.findByPk(userId, {
+        include: UserProfile,
+      });
+      let cart = await Cart.findAll(
+        { include: Item },
+        { where: { UserId: userId } }
+      );
+      let productList = [];
+      let listItem = {};
+      cart.forEach((el) => {
+        el.Items.forEach((item) => {
+          listItem.quantity = el.quantity;
+          listItem.description = item.name;
+          listItem.price = item.price;
+          productList.push(listItem);
+          listItem = {};
+        });
+      });
+
+      const data = {
+        client: {
+          company: user.name,
+          address: user.UserProfile.address,
+          zip: user.email,
+          city: user.UserProfile.phoneNumber,
+        },
+        sender: {
+          company: "MarFoodMD",
+          address: "Hacktiv8 Pondok Indah",
+          zip: "HCK-081",
+          city: "Jakarta",
+          country: "Indonesia",
+        },
+        images: {
+          logo: "https://raw.githubusercontent.com/marhanura/marfoodmd/refs/heads/main/public/logo.png",
+        },
+        information: {
+          number:
+            new Date().getFullYear() +
+            new Date().getMonth() +
+            user.role +
+            user.id,
+          date: new Date().toISOString().split("T")[0],
+        },
+        products: productList,
+        bottomNotice: "Thank you for purchasing with us! #MakanDimanaaja",
+        settings: {
+          currency: "IDR",
+        },
+      };
+      const result = await easyinvoice.createInvoice(data);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="invoice.pdf"'
+      );
+      res.send(Buffer.from(result.pdf, "base64"));
     } catch (error) {
       res.send(error);
     }
   }
+
   static async profile(req, res) {
     try {
       let id = req.session.userId;
@@ -302,6 +381,7 @@ class Controller {
       res.send(error);
     }
   }
+
   static async editProfile(req, res) {
     try {
       let id = req.session.userId;
@@ -311,6 +391,7 @@ class Controller {
       res.send(error);
     }
   }
+
   static async handlerEditProfile(req, res) {
     try {
       let id = req.session.userId;
@@ -337,6 +418,7 @@ class Controller {
       res.send(error);
     }
   }
+
   static async logout(req, res) {
     try {
       await req.session.destroy();

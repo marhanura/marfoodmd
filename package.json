@@ -11,7 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+<<<<<<< HEAD
     "connect-flash": "^0.1.1",
+=======
+>>>>>>> fde23cdc881dc08167e6b79815f71038500c6eab
     "easyinvoice": "^3.0.47",
     "ejs": "^3.1.10",
     "express": "^4.21.2",

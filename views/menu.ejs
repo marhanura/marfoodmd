@@ -5,23 +5,30 @@
     <title>Menu</title>
   </head>
   <body>
+    <%- include('./_partial/_navbar') %>
     <div class="container-fluid shadow-lg p-4" style="width: 80%">
       <h2 class="text-center text-warning">MENU</h2>
-      <a href="/menu/" class="btn btn-success">ALL MENU</a>
-      <% categories.forEach(cat => { %>
-      <a href="/menu/category/<%= cat.id %>" class="btn btn-success"
-        ><%= cat.name.toUpperCase() %></a
-      >
-      <% }) %>
-      <form class="form-inline">
+      <div class="d-flex justify-content-center">
+        <a href="/menu/" class="btn btn-success" style="margin: 0 5px"
+          >ALL MENU</a
+        >
+        <% categories.forEach(cat => { %>
+        <a
+          href="/menu/category/<%= cat.id %>"
+          class="btn btn-success"
+          style="margin: 0 5px"
+          ><%= cat.name.toUpperCase() %></a
+        >
+        <% }) %>
+      </div>
+      <form class="d-flex" method="get" style="margin: 25px">
         <input
-          class="form-control mr-sm-2"
+          class="form-control me-2"
           type="search"
-          placeholder="Search menu..."
+          name="search"
+          placeholder="Search menu"
         />
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-          Search
-        </button>
+        <button class="btn btn-success" type="submit">Search</button>
       </form>
       <% menu.forEach(el => { %>
       <div class="card mb-3">
@@ -43,11 +50,14 @@
                   ><%= formatRupiah(el.price) %></small
                 >
               </p>
-              <a
-                class="btn btn-success"
-                href="/menu/<%= el.id %>/add"
-                >Add to Cart</a
-              >
+              <div>
+                <a
+                  class="btn btn-success"
+                  href="/menu/<%= el.id %>/add"
+                  onclick="return alert('<%= el.name%> has been added to cart')"
+                  >Add to Cart</a
+                >
+              </div>
             </div>
           </div>
         </div>

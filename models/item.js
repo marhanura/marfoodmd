@@ -1,16 +1,26 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Item extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
-      Item.belongsTo(models.Category)
-      Item.belongsToMany(models.Cart, { through: models.CartItem })
+      Item.belongsTo(models.Category);
+      Item.belongsToMany(models.Cart, {
+        through: models.CartItem,
+        foreignKey: "ItemId",
+      });
+    }
+
+    static search(menu) {
+      let option = {
+        where: {},
+      };
+      if (menu) {
+        option.where.name = {
+          [Op.iLike]: `%${menu}%`,
+        };
+      }
+      return Item.findAll(option);
     }
   }
   Item.init(

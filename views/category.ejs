@@ -4,19 +4,18 @@
     <%- include('./_partial/_head') %>
     <title>Categories</title>
   </head>
-  <body>
+  <body class="bg-warning-subtle">
+    <%- include('./_partial/_navbar') %>
     <div class="container-fluid shadow-lg p-4" style="width: 80%">
       <h2 class="text-center text-warning">Categories</h2>
       <div class="row row-cols-1 row-cols-md-2 g-4">
           <% data.forEach(el => { %>
             <div class="col">
-      <div class="card menu" onclick="location.href='/categories/<%= el.id %>'">
+      <div class="card menu" onclick="location.href='/menu/category/<%= el.id %>'">
         <img src="<%= el.Items[0].imgUrl %>" class="card-img-top" alt="<%= el.name %>" style="height: 400px">
-        <button>+</button>
-        <button>-</button>
       </div>
         <div class="card-body">
-          <center><a class="btn btn-warning" href="/categories/<%= el.id %>"><%= el.name.toUpperCase() %></a></center>
+          <center><a class="btn btn-warning" href="/menu/category/<%= el.id %>"><%= el.name.toUpperCase() %></a></center>
         </div>
       </div>
       <% }) %>
