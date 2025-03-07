@@ -261,7 +261,7 @@ class Controller {
       } else {
         await CartItem.update(
           { quantity },
-          { where: { CartId: cart.id, ItemId } }
+          { where: { id: 1, CartId: cart.id, ItemId } }
         );
       }
       res.redirect("/cart");

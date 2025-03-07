@@ -6,6 +6,16 @@
   </head>
   <body class="bg-warning-subtle">
     <%- include('./_partial/_navbar') %>
+<<<<<<< HEAD
+    <% if (success_msg) { %>
+        <div class="alert alert-success"><%= success_msg %></div>
+      <% } %>
+    
+      <% if (error_msg) { %>
+        <div class="alert alert-danger"><%= error_msg %></div>
+      <% } %>
+=======
+>>>>>>> fde23cdc881dc08167e6b79815f71038500c6eab
     <div class="container py-5">
       <h2 class="text-center text-warning">Your Cart</h2>
       <div class="row justify-content-center">
@@ -60,6 +70,13 @@
                     <td><%= formatRupiah(item.price) %></td>
                     <td><%= formatRupiah(totalPrice) %></td>
                     <td>
+<<<<<<< HEAD
+                    <a href="/cart/<%= cart.id %>/delete" onclick="return confirm('Are you sure?')" class="btn btn-danger">Remove</a>
+                      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                    </td>
+                  </tr>
+                   <% }) %>
+=======
                       <a
                         href="/cart/<%= el.id %>/delete"
                         class="btn btn-danger btn-sm"
@@ -69,6 +86,7 @@
                     </td>
                   </tr>
                   <% })}) %>
+>>>>>>> fde23cdc881dc08167e6b79815f71038500c6eab
                 </tbody>
               </table>
               <div class="text-end">
@@ -78,6 +96,29 @@
                     ><%= formatRupiah(totalAll) %>
                   </span>
                 </h4>
+<<<<<<< HEAD
+                <button id="checkoutBtn" class="btn btn-success mt-3">Checkout</button>
+<script>
+  document.getElementById("checkoutBtn").addEventListener("click", async function () {
+    try {
+      const response = await fetch("/cart/invoice");
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Invoice berhasil dibuat! Klik OK untuk melihat.");
+        window.open(data.url, "_blank");
+      } else {
+        alert("Gagal membuat invoice.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan.");
+    }
+  });
+</script>
+
+               
+=======
                 <a href="/cart/success" class="btn btn-success mt-3">
                   Checkout
                 </a>
@@ -89,6 +130,7 @@
                   >
                 </center>
                 <% } %>
+>>>>>>> fde23cdc881dc08167e6b79815f71038500c6eab
               </div>
             </div>
           </div>
