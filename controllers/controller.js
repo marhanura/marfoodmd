@@ -143,7 +143,7 @@ class Controller {
       let { categoryId } = req.params;
       let menu = await Item.findAll({ where: { CategoryId: categoryId } });
       let categories = await Category.findAll();
-      res.render("menu", { menu, categories, formatRupiah });
+      res.render("menuCategory", { menu, categories, formatRupiah });
     } catch (error) {
       res.send(error);
     }
