@@ -187,19 +187,19 @@ class Controller {
 
   static async cart(req, res) {
     try {
+      let category = await Category.findAll();
+      let menu = await Item.findAll();
+      let session = req.session;
       let UserId = req.session.userId;
-      let cart = await Cart.findAll({ where: { UserId }}, {include: Item} );
-      let cartItems = await Cart.findAll({
-        include: {
-          model: CartItem,
-          include: Item,
-        }
+      let cart = await Cart.findOne({ where: { UserId } });
+      let cartItems = await CartItem.findAll({
+        where: { CartId: cart.id },
+        include: Item
       });
       let user = await User.findByPk(req.session.userId, {
         include: UserProfile
       });
-      res.send(cart)
-      res.render("cart", { cartItems, formatRupiah, user, cart });
+      res.render("cart", { cartItems, formatRupiah, user, cart, category, menu, session });
     } catch (error) {
       res.send(error.message);
     }
@@ -257,7 +257,7 @@ class Controller {
       } else {
         await CartItem.update(
           { quantity },
-          { where: { CartId: cart.id, ItemId } }
+          { where: { id: 1, CartId: cart.id, ItemId } }
         );
       }
       res.redirect("/cart");
@@ -267,22 +267,20 @@ class Controller {
   }
   static async deleteCart(req, res) {
     try {
-      let { id } = req.params;
-      await Cart.destroy({ where: { id: id } })
-      .then(deleted => {
-          if (deleted) {
-              return Cart.findAll();
+      let id = req.session; 
+      await Cart.destroy({ where: { id } })
+        .then(item => {
+          if (!item) {
+            req.flash('error', 'Item tidak ditemukan.');
           } else {
-              throw new Error('Item not found');
+            req.flash('success', 'Item berhasil dihapus.');
           }
-      })
-      .then(updatedCart => {
-          res.json({ message: 'Item deleted', cart: updatedCart });
-      })
-      .catch(error => {
-          res.status(500).json({ error: error.message });
-      });
-      res.redirect("/cart");
+          res.redirect('/cart');
+        })
+        .catch(err => {
+          req.flash('error', 'Terjadi kesalahan saat menghapus item.');
+          res.redirect('/cart');
+        });
     } catch (error) {
       res.send(error);
     }

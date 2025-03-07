@@ -1,5 +1,8 @@
 // INDEX
 
+const easyinvoice = require("easyinvoice");
+const fs = require("fs");
+const path = require("path");
 const Controller = require("../controllers/controller");
 const router = require("express").Router();
 const routerProfile = require("./profile");
@@ -21,6 +24,55 @@ const isAdmin = function (reg, res, next) {
     next();
   }
 };
+
+const generateInvoiceData = (cartItems) => ({
+  documentTitle: "Invoice",
+  currency: "IDR",
+  taxNotation: "vat",
+  sender: {
+    company: "MarFoodMD",
+    address: "Jl. Makanan No. 1",
+    zip: "12345",
+    city: "Jakarta",
+    country: "Indonesia",
+  },
+  client: {
+    company: "Pelanggan",
+    address: "Alamat Pelanggan",
+    zip: "67890",
+    city: "Kota Pelanggan",
+    country: "Indonesia",
+  },
+  invoiceNumber: Math.floor(Math.random() * 100000).toString(),
+  invoiceDate: new Date().toISOString().split("T")[0],
+  products: cartItems.map((item) => ({
+    quantity: item.quantity,
+    description: item.Item.name,
+    price: item.Item.price,
+  })),
+  bottomNotice: "Terima kasih telah berbelanja di MarFoodMD!",
+});
+
+router.get("/invoice", async (req, res) => {
+  try {
+    // Contoh cartItems, seharusnya ini diambil dari database
+    const cartItems = [
+      { Item: { name: "Ayam Goreng", price: 20000 }, quantity: 2 },
+      { Item: { name: "Nasi Uduk", price: 10000 }, quantity: 1 },
+    ];
+
+    const invoiceData = generateInvoiceData(cartItems);
+    const pdfResult = await easyinvoice.createInvoice(invoiceData);
+
+    const filePath = path.join(__dirname, "../public", "invoice.pdf");
+    fs.writeFileSync(filePath, pdfResult.pdf, "base64");
+
+    res.json({ success: true, url: "/invoice.pdf" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error generating invoice" });
+  }
+});
 
 router.get("/register", Controller.renderRegister);
 router.post("/register", Controller.handlerRegister);

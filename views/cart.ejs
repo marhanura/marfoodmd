@@ -5,42 +5,14 @@
     <title>Cart - MarFoodMD</title>
   </head>
   <body class="bg-warning-subtle">
-    <nav
-      class="navbar navbar-expand-lg navbar-light sticky-top"
-      style="background-color: #ffa725"
-    >
-      <div class="container">
-        <a class="navbar-brand fw-bold text-white" href="#">MarFoodMD</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="/menu">Menu</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a class="btn btn-light text-warning" href="/login">Login</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
+    <%- include('./_partial/_navbar') %>
+    <% if (success_msg) { %>
+        <div class="alert alert-success"><%= success_msg %></div>
+      <% } %>
+    
+      <% if (error_msg) { %>
+        <div class="alert alert-danger"><%= error_msg %></div>
+      <% } %>
     <div class="container py-5">
       <h2 class="text-center text-warning">Your Cart</h2>
       <div class="row justify-content-center">
@@ -85,9 +57,11 @@
                     <td><%= formatRupiah(el.Item.price) %></td>
                     <td><%= formatRupiah(totalPrice) %></td>
                     <td>
-                      <button class="btn btn-danger btn-sm">Remove</button>
+                    <a href="/cart/<%= cart.id %>/delete" onclick="return confirm('Are you sure?')" class="btn btn-danger">Remove</a>
+                      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                     </td>
                   </tr>
+                   <% }) %>
                 </tbody>
               </table>
               <div class="text-end">
@@ -97,8 +71,27 @@
                     ><%= formatRupiah(totalPrice) %>
                   </span>
                 </h4>
-                <button class="btn btn-success mt-3">Checkout</button>
-                <% }) %>
+                <button id="checkoutBtn" class="btn btn-success mt-3">Checkout</button>
+<script>
+  document.getElementById("checkoutBtn").addEventListener("click", async function () {
+    try {
+      const response = await fetch("/cart/invoice");
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Invoice berhasil dibuat! Klik OK untuk melihat.");
+        window.open(data.url, "_blank");
+      } else {
+        alert("Gagal membuat invoice.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan.");
+    }
+  });
+</script>
+
+               
               </div>
             </div>
           </div>
